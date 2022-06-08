@@ -1,19 +1,17 @@
-import type { GetServerSideProps, NextPage } from 'next'
-import { ServerSideRedering } from '../Features/SSG'
+import type { GetStaticProps, NextPage } from 'next'
 
-const Home: NextPage = ({repositories}: any) => {
+const Home: NextPage = ({repositories, date}: any) => {
   return (
     <>
-      <ServerSideRedering>
+        {date}
         {repositories.map((repo: string) => (
         <li key={repo}>{repo}</li>
       ))}
-      </ServerSideRedering>
     </>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await fetch('https://api.github.com/users/edsoncarlosdvp/repos')
 
   const data = await response.json()
@@ -21,8 +19,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   return {
     props: {
-      repositories: repositoryNames
-    }
+      repositories: repositoryNames,
+      date: new Date().toString()
+    },
+    revalidate: 5
   }
 }
 
