@@ -5,9 +5,10 @@ type Data = {
   name: string
 }
 
-export default function handler(
+export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(200).json({ name: 'John Doe' })
+  res: NextApiResponse<Data>  
+) => {
+  await res.unstable_revalidate('/')
+  return res.status(200).json({ name: 'John Doe' })
 }
